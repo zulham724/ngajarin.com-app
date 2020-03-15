@@ -1,29 +1,45 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import multiguard from 'vue-router-multiguard'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/',
     name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+    redirect: 'login',
+    component: require('./../views/HomePage.vue').default,
+    children: [{
+        path: 'dashboard',
+        name: 'dashboard',
+        component: require('./../views/DashboardPage.vue').default
+    },{
+        path: 'post',
+        name: 'post',
+        component: require('./../views/PostPage.vue').default
+    },{
+        path: 'notif',
+        name: 'notif',
+        component: require('./../views/NotifPage.vue').default
+    },{
+        path: 'profile',
+        name: 'profile',
+        component: require('./../views/ProfilePage.vue').default
+    }]
+}, {
+    path: '/login',
+    name: 'login',
+    component: require('./../views/LoginPage.vue').default
+}, {
+    path: '/register',
+    name: 'register',
+    component: require('./../views/RegisterPage.vue').default
+}]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: process.env.CORDOVA_PLATFORM ? 'hash' : 'history',
+    base: process.env.BASE_URL,
+    routes
 })
 
 export default router
